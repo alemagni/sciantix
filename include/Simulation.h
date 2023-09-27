@@ -713,7 +713,7 @@ public:
 		sciantix_variable[sv["HBS pore number density"]].setFinalValue(
 			solver.Decay(
 					sciantix_variable[sv["HBS pore number density"]].getInitialValue(),
-					sciantix_system[sy["Xe in UO2HBS"]].getResolutionRate(),
+					matrix[sma["UO2HBS"]].getPoreResolutionRate(),
 					matrix[sma["UO2HBS"]].getPoreNucleationRate(),
 					physics_variable[pv["Time step"]].getFinalValue()
 				)
@@ -749,8 +749,8 @@ public:
 
 		// mean (at/m^3) of gas atoms in HBS pores
 		double dA_dt = 2.0 * matrix[sma["UO2HBS"]].getPoreNucleationRate() +
-      sciantix_system[sy["Xe in UO2HBS"]].getTrappingRate() * sciantix_variable[sv["HBS pore number density"]].getFinalValue() -
-      sciantix_system[sy["Xe in UO2HBS"]].getResolutionRate() * sciantix_variable[sv["HBS pore number density"]].getFinalValue();
+      matrix[sma["UO2HBS"]].getPoreTrappingRate() * sciantix_variable[sv["HBS pore number density"]].getFinalValue() -
+      matrix[sma["UO2HBS"]].getPoreResolutionRate() * sciantix_variable[sv["HBS pore number density"]].getFinalValue();
 
 		sciantix_variable[sv["Xe in HBS pores - average"]].setFinalValue(
       solver.Integrator(
@@ -769,8 +769,8 @@ public:
       	sciantix_variable[sv["Xe in HBS pores - average"]].getFinalValue() / sciantix_variable[sv["HBS pore number density"]].getFinalValue());
 
 		// variance (at^2/m^3) (at^2/pore) of gas atoms in HBS pores
-		double dB_dt = sciantix_system[sy["Xe in UO2HBS"]].getTrappingRate() * sciantix_variable[sv["HBS pore number density"]].getFinalValue() -
-      sciantix_system[sy["Xe in UO2HBS"]].getResolutionRate() * sciantix_variable[sv["HBS pore number density"]].getFinalValue() +
+		double dB_dt = matrix[sma["UO2HBS"]].getPoreTrappingRate() * sciantix_variable[sv["HBS pore number density"]].getFinalValue() -
+      matrix[sma["UO2HBS"]].getPoreResolutionRate() * sciantix_variable[sv["HBS pore number density"]].getFinalValue() +
       matrix[sma["UO2HBS"]].getPoreNucleationRate() * pow((sciantix_variable[sv["Xe atoms per HBS pore - average"]].getFinalValue()-2.0), 2.0);
 
     sciantix_variable[sv["Xe in HBS pores - variance"]].setFinalValue(
